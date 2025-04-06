@@ -1,0 +1,15 @@
+{
+  "originHash" : "a9c17693dde8785eceea0f010117d28951eb3570bd4a4702e60a1bbbf7328141",
+  "pins" : [
+    {
+      "identity" : "serialgate",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/Kyome22/SerialGate.git",
+      "state" : {
+        "revision" : "845805702b9da4c5612fc13f17589588eaa83801",
+        "version" : "4.1.0"
+      }
+    }
+  ],
+  "version" : 3
+}
