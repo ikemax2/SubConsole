@@ -2,12 +2,9 @@
 //  AppDelegate.swift
 //  SubConsole
 //
-//  ©︎ 2006-2018 Tomas Franzén, Lighthead Software
-//  ©︎ 2018 Michael Jones, IntelliScape Computer Solutions
-//  ©︎ 2022 Dominic Rodemer
-//      reference: https://github.com/domzilla/Caffeine.git
+//  ©︎ 2025 TAKEHITO IKEMA
 //
-//  ©︎ 2025 TAKEHITO IKEMA.
+//      reference: https://github.com/domzilla/Caffeine.git
 //
 import SwiftUI
 import IOKit.pwr_mgt
