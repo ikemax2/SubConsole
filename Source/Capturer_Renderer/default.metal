@@ -2,7 +2,7 @@
 //  default.metal
 //  SubConsole
 //
-//  ©︎ 2025 TAKEHITO IKEMA.
+//  ©︎ 2025 TAKEHITO IKEMA
 //
 #include <metal_stdlib>
 #include <simd/simd.h>

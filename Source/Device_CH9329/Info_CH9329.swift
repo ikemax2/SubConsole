@@ -2,7 +2,7 @@
 //  Info_CH9329.swift
 //  SubConsole
 //
-//  ©︎ 2025 TAKEHITO IKEMA.
+//  ©︎ 2025 TAKEHITO IKEMA
 //
 struct Info_CH9329 : Equatable  {
     var version: UInt8

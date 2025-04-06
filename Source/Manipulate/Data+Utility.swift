@@ -2,7 +2,7 @@
 //  Data+Utility.swift
 //  SubConsole
 //
-//  ©︎ 2025 TAKEHITO IKEMA.
+//  ©︎ 2025 TAKEHITO IKEMA
 //
 import Foundation
 

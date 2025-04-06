@@ -2,11 +2,10 @@
 //  VideoRendererMetal420.swift
 //  SubConsole
 //
-//  ©︎ 2022 Apple Inc.
-//      reference: https://developer.apple.com/documentation/arkit/displaying-an-ar-experience-with-metal
-//      reference: https://developer.apple.com/documentation/metalfx/applying-temporal-antialiasing-and-upscaling-using-metalfx
+//  ©︎ 2025 TAKEHITO IKEMA
 //
-//  ©︎ 2025 TAKEHITO IKEMA.
+//  reference: https://developer.apple.com/documentation/arkit/displaying-an-ar-experience-with-metal
+//  reference: https://developer.apple.com/documentation/metalfx/applying-temporal-antialiasing-and-upscaling-using-metalfx
 //
 import AVFoundation
 import Metal

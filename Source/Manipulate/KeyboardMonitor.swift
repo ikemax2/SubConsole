@@ -2,10 +2,9 @@
 //  KeyboardMonitor.swift
 //  SubConsole
 //
-//  ©︎ 2020 Apple Inc.
-//      reference: https://developer.apple.com/documentation/gamecontroller/supporting-game-controllers
+//  ©︎ 2025 TAKEHITO IKEMA
 //
-//  ©︎ 2025 TAKEHITO IKEMA.
+//      reference: https://developer.apple.com/documentation/gamecontroller/supporting-game-controllers
 //
 import Foundation
 import GameController

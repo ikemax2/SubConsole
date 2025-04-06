@@ -2,7 +2,7 @@
 //  Parameter_CH9329.swift
 //  SubConsole
 //
-//  ©︎ 2025 TAKEHITO IKEMA.
+//  ©︎ 2025 TAKEHITO IKEMA
 //
 struct Parameter_CH9329  : Equatable {
     
