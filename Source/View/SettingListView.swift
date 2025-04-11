@@ -112,6 +112,7 @@ struct SettingListView: View {
         }, primaryAction: { settingIDs in
             // print("primary action \(settingIDs.first)")
             if let setting = selectedSetting(sid: settingIDs.first){
+                // TODO: すでに開いているウィンドウの場合、二重で開いてしまう。
                 openWindow(id:"console", value: setting)
             }
         })
