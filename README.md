@@ -3,6 +3,8 @@
 SubConsole is MacOS Application which provides display and manipulation environment.
 
 
+English / [日本語](https://ikemax2.github.io/SubConsole/README_jp.html)
+
 ## Outline
 This Application run on MacOS, provides display environment from external terminal and manipulation environment to it.
 
@@ -49,8 +51,8 @@ This application has been developed in following environments,
 
 
 ## Install
-- Download the package to your mac, copy it to Application folder.
-- Or, fetch the source from this repositry, compile it.   
+- Download the package to your mac from [this page](https://github.com/ikemax2/SubConsole/releases), copy it to Application folder.
+- Or, fetch the source from [this repositry](https://github.com/ikemax2/SubConsole), compile it.   
   Serial communication Library "SerialGate" is required.
   https://github.com/Kyome22/SerialGate.git  
   (The dependencies is already setted in Xcode Project, SerialGate will be downloaded automatically in scheme of Swift Package.)

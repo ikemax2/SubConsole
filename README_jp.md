@@ -3,6 +3,8 @@
 SubConsoleは、外部端末の画面表示と操作環境を提供する MacOS アプリケーションです。
 
 
+[English](https://ikemax2.github.io/SubConsole/) / 日本語
+
 ## 概要
 このアプリケーションはMacOS上で稼働し、外部端末が出力する画面の表示と、その端末の操作環境を提供します。
 1組のモニタ、キーボードやマウスを、ホスト端末となるMacと複数のゲスト端末の間で随時
@@ -47,8 +49,8 @@ http://minnanolab.net/product/pro_keyboardmouse/pro_keyboardmouse.html
 
 ## インストール
 
-- パッケージをMacにダウンロードしてApplicationフォルダにコピーしてください。
-- あるいは、Xcodeで、このリポジトリからソースをfetchしてコンパイルしてください。  
+- [このページ](https://github.com/ikemax2/SubConsole/releases)からパッケージをMacにダウンロードしてApplicationフォルダにコピーしてください。
+- あるいは、Xcodeで[このリポジトリ](https://github.com/ikemax2/SubConsole)からソースをfetchしてコンパイルしてください。  
   コンパイルには、シリアル通信ライブラリ SerialGate が必要です。
   https://github.com/Kyome22/SerialGate.git  
   (ソース内、Xcode プロジェクト内で依存関係が設定されており、swift packageの仕組みで自動でダウンロードします。)
@@ -162,6 +164,7 @@ N/A
 マウスカーソルの座標の種類を選択します。
 - "Top-Left"の場合、絶対座標指示の場合、画面の左上隅を原点とし、右方向に行くほどX座標値が大きくなり、下方向に行くほどY座標値が大きくなります。相対座標指示の場合、マウスカーソルが画面の右方向に行くとX方向移動量を大きくなり、画面の下方向に行くほどY方向移動量が大きくなります。
 - "Bottom-Left"の場合で、絶対座標指示の場合、画面の左下隅を原点とし、右方向に行くほどX座標値が大きくなり、上方向に行くほどY座標値が大きくなります。相対座標指示の場合、マウスカーソルが画面の右方向に行くとX方向移動量が大きくなり、画面の上方向に行くほどY方向移動量が大きくなります。
-- 
+
+
 
 　　
