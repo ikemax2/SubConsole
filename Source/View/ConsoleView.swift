@@ -95,7 +95,9 @@ struct ConsoleView: View {
                           audioDevice: $audioDevice,
                           displayStatus: $displayStatus,
                           manipulator: manipulator,
-                          drawHandler: manipulator.drawHandler)
+                          drawHandler: manipulator.drawHandler,
+                          cursorType: .empty
+                          )
         }
         .aspectRatio(videoDeviceFormat?.aspectRatio ?? 1, contentMode: .fit)
         .navigationTitle("\(setting.name)")
@@ -103,15 +105,15 @@ struct ConsoleView: View {
         .toolbar{
             ConsoleToolbar(muted: $manipulator.converter.mute)
         }*/
+        /*
         .onHover { hover in
-            
             if hover == true {
                 NSCursor.hide()
             }else {
                 NSCursor.unhide()
             }
-            
         }
+         */
         .onAppear(){
             // manipulator reset
             self.manipulator.reset()
@@ -132,9 +134,52 @@ struct ConsoleView: View {
                 keyboardMonitor?.setManipulator(self.manipulator)
                 self.manipulator.reset()
             }
-            // 起動直後に didBecomeKeyNotificationは呼ばれるが、そのときはidentifierはまだ設定されていない
+            // 起動直後に didBecomeKeyNotificationは呼ばれるが、そのときはappDelegate.windowsに登録されていない
         }
+        /*
+        .onReceive(NotificationCenter.default.publisher(for: NSWindow.didEnterFullScreenNotification)) { notification in
+            guard let window = notification.object as? NSWindow else {
+                return
+            }
+            
+            if let sw = appDelegate.windows[ConsoleView.identifier(ssid: setting.id)]?.object, window == sw {
+                print("enter fullscreen")
+                self.manipulator.isFullScreen = true
+                //var options = NSApplication.shared.currentSystemPresentationOptions
+                //options.remove(.autoHideDock)
+                //options.insert(.hideDock)
+                //NSApplication.shared.presentationOptions = options
+                
+                Task {
+                    await MainActor.run{
+                        NSApplication.shared.presentationOptions = [.hideDock, .hideMenuBar]
+                    }
+                }
+
+
+            }
+        }
+        .onReceive(NotificationCenter.default.publisher(for: NSWindow.didExitFullScreenNotification)) { notification in
+            guard let window = notification.object as? NSWindow else {
+                return
+            }
+            
+            if let sw = appDelegate.windows[ConsoleView.identifier(ssid: setting.id)]?.object, window == sw {
+                print("exit fullscreen")
+                self.manipulator.isFullScreen = false
+            }
+        }
+         */
         
     }
+    /*
+    var isFullScreen : Bool {
+                
+        if let w = appDelegate.windows[ConsoleView.identifier(ssid: setting.id)]?.object {
+            return w.styleMask.contains(.fullScreen)
+        }
+        return false
         
+    }
+     */
 }

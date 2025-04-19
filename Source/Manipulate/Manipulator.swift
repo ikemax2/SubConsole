@@ -25,6 +25,9 @@ class Manipulator : NSObject, ObservableObject, DisplayViewDelegate {
     var prevSendCursorLocation: CGPoint
     
     var pointingFrameType : PointingFrameType
+    //var isCursorHidden : Bool = false
+    
+    // var isFullScreen : Bool = false
     
     init(manipulatingArea: ManipulatingArea, converter: ManipulateConverter, pointingFrameType: PointingFrameType) {
         self.manipulatingArea = manipulatingArea
@@ -56,7 +59,6 @@ class Manipulator : NSObject, ObservableObject, DisplayViewDelegate {
             }
             // マウスカーソル移動コマンドについては、drawHandler( 画面描画のタイミング )の頻度で送信する。
             
-            //if weakself.converter.isMouseCursorAbsolute == true {
             if weakself.converter.mousePointingCommandType == .absolute {
                 if weakself.prevSendCursorLocation != weakself.lastCursorLocation {
                     if let hLocation = weakself.manipulatingArea.videoLocation(fromViewLocation: weakself.lastCursorLocation) {
@@ -101,6 +103,7 @@ class Manipulator : NSObject, ObservableObject, DisplayViewDelegate {
         
         self.lastCursorLocation = convertedPoint
         
+        // print("MouseMoved point:\(location) convertedPoint: \(convertedPoint) ")
         // この後、画面描画のタイミング drawHandler の中でマウスカーソル移動コマンドを送信する。
     }
     
@@ -126,6 +129,16 @@ class Manipulator : NSObject, ObservableObject, DisplayViewDelegate {
     func reset() {
         self.converter.reset()
     }
+    /*
+    var isCursorInTitleBarArea : Bool {
+        if self.converter.mousePointingCommandType == .absolute {
+            if self.lastCursorLocation.y < 35 {
+                return true
+            }
+        }
+        return false
+    }
+    */
     
     // MARK: - DisplayViewDelegate
 
@@ -141,6 +154,37 @@ class Manipulator : NSObject, ObservableObject, DisplayViewDelegate {
         }
 
         // print("MouseMoved \(event.locationInWindow),  \(event.deltaX), \(event.deltaY)")
+        //if isCursorHidden == false {
+        //NSCursor.hide()
+        //    isCursorHidden = true
+        //}
+    }
+    
+    func mouseEntered(event :NSEvent) {
+        //print("MouseEntered ")
+        /*
+        Task {
+            // try await Task.sleep(nanoseconds: UInt64(0.5 * 1000 * 1000 * 1000) )
+            await MainActor.run{
+                //NSCursor.hide()
+                //isCursorHidden = true
+             }
+
+        }
+         */
+    }
+    
+    func mouseExited(event : NSEvent) {
+        //print("MouseExited ")
+        /*
+        Task {
+            // try await Task.sleep(nanoseconds: UInt64(0.5 * 1000 * 1000 * 1000) )
+            await MainActor.run{
+                //NSCursor.unhide()
+                //isCursorHidden = false
+            }
+        }
+         */
     }
     
     func mouseDown(event: NSEvent) {
@@ -149,6 +193,17 @@ class Manipulator : NSObject, ObservableObject, DisplayViewDelegate {
     
     func mouseUp(event: NSEvent) {
         self.converter.mouseButtonPressed(button: MouseButton.LeftButton, isPressed: false)
+        /*
+        // fullscreen時、画面上部をクリックするとマウスカーソルが現れるので、消去する。
+        if self.isFullScreen == true && self.isCursorInTitleBarArea == true {
+            Task {
+                try await Task.sleep(nanoseconds: UInt64(0.2 * 1000 * 1000 * 1000) )
+                await MainActor.run{
+                    NSCursor.hide()
+                    isCursorHidden = true
+                }
+            }
+        }*/
     }
     
     func rightMouseDown(event: NSEvent) {
@@ -161,6 +216,17 @@ class Manipulator : NSObject, ObservableObject, DisplayViewDelegate {
     
     func otherMouseDown(event: NSEvent) {
         self.converter.mouseButtonPressed(button: MouseButton.MiddleButton, isPressed: true)
+           /*
+        // fullscreen時、画面上部をクリックするとマウスカーソルが現れるので、消去する。
+        if self.isFullScreen == true && self.isCursorInTitleBarArea == true {
+            Task {
+                try await Task.sleep(nanoseconds: UInt64(0.2 * 1000 * 1000 * 1000) )
+                await MainActor.run{
+                    NSCursor.hide()
+                    isCursorHidden = true
+                }
+            }
+        }*/
     }
     
     func otherMouseUp(event: NSEvent) {

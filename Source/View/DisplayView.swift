@@ -9,6 +9,9 @@ import AVFoundation
 
 protocol DisplayViewDelegate : AnyObject {
     func mouseMoved(event: NSEvent)
+    func mouseEntered(event :NSEvent)
+    func mouseExited(event : NSEvent)
+    
     func mouseDown(event: NSEvent)
     func mouseUp(event: NSEvent)
     func rightMouseDown(event: NSEvent)
@@ -31,10 +34,13 @@ class DisplayView : NSView {
     weak var manipulator: Manipulator?
     
     weak var delegate : DisplayViewDelegate?
+           
+    var cursor : NSCursor?
     
     init(statusUpdateHandler: VideoRenderer.StatusUpdateHandler? = nil,
          manipulator: Manipulator? = nil,
-         drawHandler: VideoRenderer.DrawHandler? = nil) {
+         drawHandler: VideoRenderer.DrawHandler? = nil,
+         cursorType: CursorType? = nil) {
         
         self.metalLayer = CAMetalLayer()
         self.manipulator = manipulator
@@ -50,6 +56,26 @@ class DisplayView : NSView {
         prepareMetalLayer()
         
         self.videoRenderer.connectToLayer(self.metalLayer)
+                
+        // load cursor Image
+        
+        switch cursorType {
+        case .dot:
+            if let image = NSImage(named: "cursor_dot.png") {
+                cursor = NSCursor(image: image, hotSpot:.zero)
+            }else{
+                fatalError()
+            }
+        case .empty:
+            if let image = NSImage(named: "cursor_empty.png") {
+                cursor = NSCursor(image: image, hotSpot:.zero)
+            }else{
+                fatalError()
+            }
+        case .none:
+            break            
+        }
+        
     }
     
     func prepareMetalLayer(){
@@ -163,7 +189,7 @@ class DisplayView : NSView {
             }
         }
         CATransaction.commit()
-        
+        // TODO: メニューバーを自動非表示させない場合に、マウスカーソル位置と一致しない。
         self.manipulator?.manipulatingArea.displayDimensions = self.frame.size
         
         print(" metalLayer contentsScale: \(self.metalLayer.contentsScale)")
@@ -192,9 +218,14 @@ class DisplayView : NSView {
         }
         
         let options: NSTrackingArea.Options = [
+            .mouseEnteredAndExited,
             .mouseMoved,
             .cursorUpdate,
-            .activeInKeyWindow
+            .activeInKeyWindow,
+            .inVisibleRect
+            //.activeAlways
+            //.activeWhenFirstResponder
+                
         ]
         let trackingArea = NSTrackingArea(rect: self.bounds, options: options, owner: self, userInfo: nil)
         self.addTrackingArea(trackingArea)
@@ -221,6 +252,18 @@ class DisplayView : NSView {
     // mouseMoved は、NSTrackingAreaなどを利用しないと反応しない
     override func mouseMoved(with event: NSEvent){
         delegate?.mouseMoved(event: event)
+    }
+    
+    override func mouseEntered(with event: NSEvent) {
+        //cursorInRectangle = true
+        //addCursorRect(self.bounds, cursor: NSCursor(image: cursorImage, hotSpot:.zero))
+        delegate?.mouseEntered(event: event)
+    }
+    
+    override func mouseExited(with event: NSEvent) {
+        //cursorInRectangle = false
+        //NSCursor.arrow.set()
+        delegate?.mouseExited(event: event)
     }
         
     override func mouseDown(with event: NSEvent){
@@ -264,5 +307,17 @@ class DisplayView : NSView {
         delegate?.scrollWheel(event: event)
     }
     
+    override func cursorUpdate(with event: NSEvent) {
+        super.cursorUpdate(with: event)
+        cursor?.set()
+    }
+    
+    /*
+    override func resetCursorRects() {
+        print("resetCursorRects called.")
+       // discardCursorRects()
+       // addCursorRect(self.visibleRect, cursor: NSCursor(image: cursorImage, hotSpot:.zero))
+    }
+    */
 }
 
