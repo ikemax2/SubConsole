@@ -11,6 +11,7 @@ import SerialGate
 
 struct SettingListView: View {
     @Binding var consoleStatus: Dictionary<UUID, Bool>
+    @EnvironmentObject var appDelegate : AppDelegate
     
     @Environment(\.modelContext) private var modelContext
     @Query private var settings: [ConsoleSetting]
@@ -160,7 +161,8 @@ struct SettingListView: View {
                 return
             }
             
-            if window.identifier == NSUserInterfaceItemIdentifier(SettingListView.identifier() ) {
+            if let sw = appDelegate.windows[SettingListView.identifier()]?.object, window == sw {
+            // if window.identifier == NSUserInterfaceItemIdentifier(SettingListView.identifier() ) {
                 print("become keyWindow of settingListView")
                 keyboardMonitor?.setManipulator(nil)
             }

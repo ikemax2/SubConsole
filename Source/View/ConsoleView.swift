@@ -126,7 +126,8 @@ struct ConsoleView: View {
                 return
             }
             
-            if window.identifier == NSUserInterfaceItemIdentifier(ConsoleView.identifier(ssid: setting.id)) {
+            if let sw = appDelegate.windows[ConsoleView.identifier(ssid: setting.id)]?.object, window == sw {
+            // if window.identifier == NSUserInterfaceItemIdentifier(ConsoleView.identifier(ssid: setting.id)) {
                 print("become keyWindow of consoleView \(setting.id)")
                 keyboardMonitor?.setManipulator(self.manipulator)
                 self.manipulator.reset()

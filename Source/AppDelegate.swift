@@ -13,6 +13,9 @@ class AppDelegate: NSObject, NSApplicationDelegate, ObservableObject {
     
     var userSessionIsActive : Bool = true
     
+    var windows = Dictionary<String, WeakReference<NSWindow>>()
+    
+    
     var isPreventingSleep : Bool = false {
         didSet {
             if isPreventingSleep == true {
@@ -99,3 +102,9 @@ class AppDelegate: NSObject, NSApplicationDelegate, ObservableObject {
     }
     
 }
+
+
+struct WeakReference<T: AnyObject> {
+    weak var object: T?
+}
+

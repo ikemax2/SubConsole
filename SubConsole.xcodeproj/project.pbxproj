@@ -12,7 +12,6 @@
 		3979351B2D6BF457004F74CD /* SerialGate in Frameworks */ = {isa = PBXBuildFile; productRef = 3979351A2D6BF457004F74CD /* SerialGate */; };
 		39C3449B2D8EB65400D040FB /* README.md in Resources */ = {isa = PBXBuildFile; fileRef = 39C3449A2D8EB64D00D040FB /* README.md */; };
 		39C3449D2D8EB7A800D040FB /* LICENSE.txt in Resources */ = {isa = PBXBuildFile; fileRef = 39C3449C2D8EB7A100D040FB /* LICENSE.txt */; };
-		39D47ACC2DA95648001CD150 /* _config.yml in Resources */ = {isa = PBXBuildFile; fileRef = 39D47ACB2DA9563E001CD150 /* _config.yml */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -20,7 +19,6 @@
 		3956B3932D8EDF2B00BE0D75 /* README_jp.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = README_jp.md; sourceTree = "<group>"; };
 		39C3449A2D8EB64D00D040FB /* README.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
 		39C3449C2D8EB7A100D040FB /* LICENSE.txt */ = {isa = PBXFileReference; lastKnownFileType = text; path = LICENSE.txt; sourceTree = "<group>"; };
-		39D47ACB2DA9563E001CD150 /* _config.yml */ = {isa = PBXFileReference; lastKnownFileType = text.yaml; path = _config.yml; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedRootGroup section */
@@ -47,7 +45,6 @@
 		3939F0852D460E5E001871A1 = {
 			isa = PBXGroup;
 			children = (
-				39D47ACB2DA9563E001CD150 /* _config.yml */,
 				3956B3932D8EDF2B00BE0D75 /* README_jp.md */,
 				39C3449C2D8EB7A100D040FB /* LICENSE.txt */,
 				39C3449A2D8EB64D00D040FB /* README.md */,
@@ -135,7 +132,6 @@
 			files = (
 				39C3449B2D8EB65400D040FB /* README.md in Resources */,
 				3956B3942D8EDF3400BE0D75 /* README_jp.md in Resources */,
-				39D47ACC2DA95648001CD150 /* _config.yml in Resources */,
 				39C3449D2D8EB7A800D040FB /* LICENSE.txt in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

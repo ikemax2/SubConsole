@@ -46,7 +46,9 @@ struct SubConsoleApp: App {
                 
                 Task {
                     let window = NSApplication.shared.keyWindow
-                    window?.identifier = NSUserInterfaceItemIdentifier(SettingListView.identifier())
+                    
+                    appDelegate.windows[SettingListView.identifier()] = WeakReference(object:window)
+                    // window?.identifier = NSUserInterfaceItemIdentifier(SettingListView.identifier())
                 }
             }
         }
@@ -82,7 +84,7 @@ struct SubConsoleApp: App {
                             print("screen width : \(scr.frame.width)x\(scr.frame.height)")
                             print("screen backingScaleFactor \(scr.backingScaleFactor)")
                         }
-                                                
+                                                                                                
                         DispatchQueue.main.asyncAfter(deadline: .now()) {
                             // TODO: 同時に複数のウィンドウが開くような状況では、正しく動作しない。
                             let window = NSApplication.shared.keyWindow
@@ -90,6 +92,8 @@ struct SubConsoleApp: App {
                             if s.windowFullScreenStarting == true {
                                 window?.toggleFullScreen(nil)
                             }
+                            
+                            appDelegate.windows[ConsoleView.identifier(ssid: s.id)] = WeakReference(object:window)
                             
                             var screenSize = NSSize(width: 1980, height: 1180)
                             if let ms = NSScreen.main {
@@ -106,7 +110,7 @@ struct SubConsoleApp: App {
                             window?.setContentSize(windowSize)
                             window?.contentAspectRatio = NSSize(width: size.width, height: size.height)
                             
-                            window?.identifier = NSUserInterfaceItemIdentifier(ConsoleView.identifier(ssid: s.id))
+                            //window?.identifier = NSUserInterfaceItemIdentifier(ConsoleView.identifier(ssid: s.id))
                             
                         }
                         
