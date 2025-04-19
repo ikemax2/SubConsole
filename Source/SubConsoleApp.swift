@@ -110,6 +110,8 @@ struct SubConsoleApp: App {
                             window?.setContentSize(windowSize)
                             window?.contentAspectRatio = NSSize(width: size.width, height: size.height)
                             
+                            window?.backgroundColor = NSColor.black  // residual space color when fullscreen mode
+                            
                             //window?.identifier = NSUserInterfaceItemIdentifier(ConsoleView.identifier(ssid: s.id))
                             
                         }

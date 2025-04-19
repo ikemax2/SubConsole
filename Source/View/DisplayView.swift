@@ -8,7 +8,7 @@ import AppKit
 import AVFoundation
 
 protocol DisplayViewDelegate : AnyObject {
-    func mouseMoved(event: NSEvent)
+    func mouseMoved(event: NSEvent, view: NSView)
     func mouseEntered(event :NSEvent)
     func mouseExited(event : NSEvent)
     
@@ -19,9 +19,9 @@ protocol DisplayViewDelegate : AnyObject {
     func otherMouseDown(event: NSEvent)
     func otherMouseUp(event: NSEvent)
     
-    func mouseDragged(event: NSEvent)
-    func rightMouseDragged(event: NSEvent)
-    func otherMouseDragged(event: NSEvent)
+    func mouseDragged(event: NSEvent, view: NSView)
+    func rightMouseDragged(event: NSEvent, view: NSView)
+    func otherMouseDragged(event: NSEvent, view: NSView)
     func scrollWheel(event: NSEvent)
 }
 
@@ -87,7 +87,7 @@ class DisplayView : NSView {
         self.metalLayer.pixelFormat = .bgra8Unorm
         self.metalLayer.framebufferOnly = false
         //self.metalLayer.contentsGravity = .topLeft
-        self.metalLayer.contentsGravity = .resizeAspect
+        self.metalLayer.contentsGravity = .resizeAspect        
         self.metalLayer.contentsScale = 2.0   // TODO: 環境に応じて変更
         self.metalLayer.drawsAsynchronously = true
         self.metalLayer.removeAllAnimations()
@@ -176,7 +176,7 @@ class DisplayView : NSView {
     override func layout() {
         // layout() はviewサイズ変更があったときに呼ばれる。
         
-        print("CALayerView frame did change. \(self.frame.width)x\(self.frame.height)")
+        print("DisplayView frame did change. \(self.frame.width)x\(self.frame.height)")
         
         CATransaction.begin()
         // アニメーションなし
@@ -251,7 +251,7 @@ class DisplayView : NSView {
     
     // mouseMoved は、NSTrackingAreaなどを利用しないと反応しない
     override func mouseMoved(with event: NSEvent){
-        delegate?.mouseMoved(event: event)
+        delegate?.mouseMoved(event: event, view: self)
     }
     
     override func mouseEntered(with event: NSEvent) {
@@ -291,16 +291,15 @@ class DisplayView : NSView {
     }
     
     override func mouseDragged(with event: NSEvent) {
-        delegate?.mouseDragged(event: event)
-
+        delegate?.mouseDragged(event: event, view: self)
     }
         
     override func rightMouseDragged(with event: NSEvent) {
-        delegate?.rightMouseDragged(event: event)
+        delegate?.rightMouseDragged(event: event, view: self)
     }
     
     override func otherMouseDragged(with event: NSEvent) {
-        delegate?.otherMouseDragged(event: event)
+        delegate?.otherMouseDragged(event: event, view: self)
     }
     
     override func scrollWheel(with event: NSEvent) {

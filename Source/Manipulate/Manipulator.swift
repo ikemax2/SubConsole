@@ -142,12 +142,12 @@ class Manipulator : NSObject, ObservableObject, DisplayViewDelegate {
     
     // MARK: - DisplayViewDelegate
 
-    func mouseMoved(event: NSEvent){
+    func mouseMoved(event: NSEvent, view: NSView){
         
         //if self.converter.isMouseCursorAbsolute == true {
         if self.converter.mousePointingCommandType == .absolute {
             // event.locationInWindow は bottom-leftで出力される.
-            self.updateAbsoluteMouseCursorLocation(event.locationInWindow, frameType: .bottomleft)
+            self.updateAbsoluteMouseCursorLocation(view.convert(event.locationInWindow, from: nil), frameType: .bottomleft)
         }else{ // .relative
             // event.deltaX/Y は top-leftで出力される.
             self.updateRelativeMouseCursorLocation(Float(event.deltaX), Float(event.deltaY), frameType: .topleft)
@@ -233,11 +233,10 @@ class Manipulator : NSObject, ObservableObject, DisplayViewDelegate {
         self.converter.mouseButtonPressed(button: MouseButton.MiddleButton, isPressed: false)
     }
     
-    func mouseDragged(event: NSEvent) {
+    func mouseDragged(event: NSEvent, view: NSView) {
 
-        // if self.converter.isMouseCursorAbsolute == true {
         if self.converter.mousePointingCommandType == .absolute {
-            self.updateAbsoluteMouseCursorLocation(event.locationInWindow, frameType: .bottomleft)
+            self.updateAbsoluteMouseCursorLocation(view.convert(event.locationInWindow, from: nil), frameType: .bottomleft)
         }else{ // .relative
             self.updateRelativeMouseCursorLocation(Float(event.deltaX), Float(event.deltaY), frameType: .topleft)
         }
@@ -245,11 +244,10 @@ class Manipulator : NSObject, ObservableObject, DisplayViewDelegate {
         
     }
     
-    func rightMouseDragged(event: NSEvent) {
+    func rightMouseDragged(event: NSEvent, view: NSView) {
         
-        // if self.converter.isMouseCursorAbsolute == true {
         if self.converter.mousePointingCommandType == .absolute {
-            self.updateAbsoluteMouseCursorLocation(event.locationInWindow, frameType: .bottomleft)
+            self.updateAbsoluteMouseCursorLocation(view.convert(event.locationInWindow, from: nil), frameType: .bottomleft)
         }else{ // .relative
             self.updateRelativeMouseCursorLocation(Float(event.deltaX), Float(event.deltaY), frameType: .topleft)
         }
@@ -258,11 +256,10 @@ class Manipulator : NSObject, ObservableObject, DisplayViewDelegate {
     }
     
     
-    func otherMouseDragged(event: NSEvent) {
+    func otherMouseDragged(event: NSEvent, view: NSView) {
         
-        // if self.converter.isMouseCursorAbsolute == true {
         if self.converter.mousePointingCommandType == .absolute {
-            self.updateAbsoluteMouseCursorLocation(event.locationInWindow, frameType: .bottomleft)
+            self.updateAbsoluteMouseCursorLocation(view.convert(event.locationInWindow, from: nil), frameType: .bottomleft)
         }else{ // .relative
             self.updateRelativeMouseCursorLocation(Float(event.deltaX), Float(event.deltaY), frameType: .topleft)
         }
