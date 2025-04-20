@@ -112,7 +112,6 @@ struct SubConsoleApp: App {
                             
                             window?.backgroundColor = NSColor.black  // residual space color when fullscreen mode
                             
-                            //window?.identifier = NSUserInterfaceItemIdentifier(ConsoleView.identifier(ssid: s.id))
                             
                         }
                         

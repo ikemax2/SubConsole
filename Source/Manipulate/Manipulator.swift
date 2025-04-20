@@ -144,7 +144,6 @@ class Manipulator : NSObject, ObservableObject, DisplayViewDelegate {
 
     func mouseMoved(event: NSEvent, view: NSView){
         
-        //if self.converter.isMouseCursorAbsolute == true {
         if self.converter.mousePointingCommandType == .absolute {
             // event.locationInWindow は bottom-leftで出力される.
             self.updateAbsoluteMouseCursorLocation(view.convert(event.locationInWindow, from: nil), frameType: .bottomleft)

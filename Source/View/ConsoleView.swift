@@ -172,14 +172,4 @@ struct ConsoleView: View {
          */
         
     }
-    /*
-    var isFullScreen : Bool {
-                
-        if let w = appDelegate.windows[ConsoleView.identifier(ssid: setting.id)]?.object {
-            return w.styleMask.contains(.fullScreen)
-        }
-        return false
-        
-    }
-     */
 }

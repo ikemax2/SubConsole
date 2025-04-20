@@ -36,6 +36,7 @@ class DisplayView : NSView {
     weak var delegate : DisplayViewDelegate?
            
     var cursor : NSCursor?
+    var cursorCheckCounter : Int = 0
     
     init(statusUpdateHandler: VideoRenderer.StatusUpdateHandler? = nil,
          manipulator: Manipulator? = nil,
@@ -189,7 +190,6 @@ class DisplayView : NSView {
             }
         }
         CATransaction.commit()
-        // TODO: メニューバーを自動非表示させない場合に、マウスカーソル位置と一致しない。
         self.manipulator?.manipulatingArea.displayDimensions = self.frame.size
         
         print(" metalLayer contentsScale: \(self.metalLayer.contentsScale)")
@@ -199,7 +199,16 @@ class DisplayView : NSView {
         //親クラスのlayout()を呼ぶ。必須。
         super.layout()
     }
-    
+        
+    var isFullScreen : Bool {
+                
+        if let w = self.window {
+            return w.styleMask.contains(.fullScreen)
+        }
+        return false
+        
+    }
+   
     
     // MARK: - for manipulating
     
@@ -252,6 +261,19 @@ class DisplayView : NSView {
     // mouseMoved は、NSTrackingAreaなどを利用しないと反応しない
     override func mouseMoved(with event: NSEvent){
         delegate?.mouseMoved(event: event, view: self)
+
+        // fullscreen時に限定して、カーソルを強制的に戻す。以下の現象への対応。 NSCursor.currentも正しく動作していない模様。
+        //   ツールバーのあたりをクリックするとカーソルがデフォルトに戻される現象
+        //   dockを自動表示に設定しているときに、カーソルをエッジに持っていくと、カーソルがデフォルトに戻される現象
+        if isFullScreen == true {
+            if cursorCheckCounter > 300 {
+                print("cursor reset.")
+                self.cursor?.set()
+                cursorCheckCounter = 0
+            }
+            cursorCheckCounter += 1
+        }
+        
     }
     
     override func mouseEntered(with event: NSEvent) {
@@ -308,7 +330,7 @@ class DisplayView : NSView {
     
     override func cursorUpdate(with event: NSEvent) {
         super.cursorUpdate(with: event)
-        cursor?.set()
+        self.cursor?.set()
     }
     
     /*
