@@ -46,6 +46,22 @@ struct SettingListView: View {
         settings.sorted(using: sortOrder)
     }
     
+    var newSettingName : String {
+        var lastNum = 0
+        settings.forEach {
+            if $0.name.hasPrefix("Console ") == true {
+                print("setting name: \($0.name)")
+                let numString = $0.name.replacingOccurrences(of: "Console ", with: "")
+                if let num = Int(numString), lastNum < num {
+                    lastNum = num
+                }
+            }
+        }
+
+        lastNum += 1
+        return "Console \(lastNum)"
+    }
+    
     var body: some View {
         
         Table(of: ConsoleSetting.self, selection: $selectedSettingID, sortOrder: $sortOrder){
@@ -113,7 +129,6 @@ struct SettingListView: View {
         }, primaryAction: { settingIDs in
             // print("primary action \(settingIDs.first)")
             if let setting = selectedSetting(sid: settingIDs.first){
-                // TODO: すでに開いているウィンドウの場合、二重で開いてしまう。
                 openWindow(id:"console", value: setting)
             }
         })
@@ -124,7 +139,7 @@ struct SettingListView: View {
         .toolbar{
             SettingListToolbar(editing: $isEditing, selectedSettingID: $selectedSettingID, consoleStatus: $consoleStatus) {
                 
-                let newSetting = ConsoleSetting(name: "setting 1")
+                let newSetting = ConsoleSetting(name: self.newSettingName)
                 
                 modelContext.insert(newSetting)
                 selectedSettingID = newSetting.id
