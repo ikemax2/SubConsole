@@ -48,6 +48,9 @@ struct SettingEditView: View {
     @State private var formMousePointingFrameType : PointingFrameType = .topleft
     let availablePointingFrameType : [PointingFrameType] = [.topleft, .bottomleft]
     
+    @State private var formMouseCursorType : CursorType? = nil
+    let availableCursorType : [CursorType] = [.dot, .empty]
+    
     @ObservedObject var deviceDiscovery : DeviceDiscovery
     
     init(setting: ConsoleSetting, deviceDiscovery: DeviceDiscovery) {
@@ -62,9 +65,10 @@ struct SettingEditView: View {
         _formWindowFullSizeStating = State(initialValue: setting.windowFullScreenStarting)
         _formPreventDisplaySleep = State(initialValue: setting.preventDisplaySleep)
         
-        //_formMouseCursorAbsolute = State(initialValue: setting.mouseCursorAbsolute0)
         _formMousePointingCommandType = State(initialValue: setting.mousePointingCommandType0)
         _formMousePointingFrameType = State(initialValue: setting.mousePointingFrameType0)
+        _formMouseCursorType = State(initialValue: setting.mouseCursorType0)
+
                         
         let videoDevice = deviceDiscovery.availableCaptureDevices.first(where: {$0.uniqueID == setting.videoDeviceID0})
         _selectedVideoDevice = State(initialValue: videoDevice)
@@ -292,6 +296,16 @@ struct SettingEditView: View {
                                 Text( pointingFrameType.description).tag( pointingFrameType )
                             }
                         }
+                        
+                        Divider()
+                        
+                        Picker("Cursor Type", selection: $formMouseCursorType){
+                            Text("System Default").tag( nil as CursorType? )
+                            ForEach(availableCursorType, id:\.self) { cursorType in
+                                Text(cursorType.description).tag( Optional(cursorType) )
+                            }
+                        }
+                        
                     }
                     Spacer()
                     
@@ -336,6 +350,7 @@ struct SettingEditView: View {
                     
                     setting.mousePointingCommandType0 = formMousePointingCommandType
                     setting.mousePointingFrameType0 = formMousePointingFrameType
+                    setting.mouseCursorType0 = formMouseCursorType
                     
                     dismiss()
                 }){

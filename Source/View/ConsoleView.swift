@@ -30,7 +30,9 @@ struct ConsoleView: View {
     
     static func identifier(ssid: UUID ) -> String {
         "Console_\(ssid)"
-    }    
+    }
+    
+    private var cursorType : CursorType? = nil
     
     init(setting: ConsoleSetting, keyboardMonitor: KeyboardMonitor, deviceDiscovery: DeviceDiscovery) {
         print("ConsoleView initialized \(setting)")
@@ -85,6 +87,8 @@ struct ConsoleView: View {
         }else{
             _audioDevice = State(initialValue: nil)
         }
+        
+        cursorType = setting.mouseCursorType0
     }
     
     var body: some View {
@@ -94,9 +98,9 @@ struct ConsoleView: View {
                           captureFrameDuration: $videoDeviceFrameDuration,
                           audioDevice: $audioDevice,
                           displayStatus: $displayStatus,
-                          manipulator: manipulator,
-                          drawHandler: manipulator.drawHandler,
-                          cursorType: .empty
+                          manipulator: self.manipulator,
+                          drawHandler: self.manipulator.drawHandler,
+                          cursorType: self.cursorType
                           )
         }
         .aspectRatio(videoDeviceFormat?.aspectRatio ?? 1, contentMode: .fit)

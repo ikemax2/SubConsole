@@ -61,6 +61,9 @@ class DisplayView : NSView {
         // load cursor Image
         
         switch cursorType {
+        case .none :
+            cursor = nil
+            break
         case .dot:
             if let image = NSImage(named: "cursor_dot.png") {
                 cursor = NSCursor(image: image, hotSpot:.zero)
@@ -73,8 +76,6 @@ class DisplayView : NSView {
             }else{
                 fatalError()
             }
-        case .none:
-            break            
         }
         
     }
@@ -265,10 +266,10 @@ class DisplayView : NSView {
         // fullscreen時に限定して、カーソルを強制的に戻す。以下の現象への対応。 NSCursor.currentも正しく動作していない模様。
         //   ツールバーのあたりをクリックするとカーソルがデフォルトに戻される現象
         //   dockを自動表示に設定しているときに、カーソルをエッジに持っていくと、カーソルがデフォルトに戻される現象
-        if isFullScreen == true {
+        if let c = self.cursor, isFullScreen == true {
             if cursorCheckCounter > 300 {
-                print("cursor reset.")
-                self.cursor?.set()
+                // print("cursor reset.")
+                c.set()
                 cursorCheckCounter = 0
             }
             cursorCheckCounter += 1

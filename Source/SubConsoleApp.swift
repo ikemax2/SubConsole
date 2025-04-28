@@ -24,13 +24,23 @@ struct SubConsoleApp: App {
         let libraryPath = NSSearchPathForDirectoriesInDomains(.libraryDirectory, .userDomainMask, true)[0] as! String
         print("Library Path:"+libraryPath)
         
-        let schema = Schema([
-            ConsoleSetting.self,
-        ])
-        let modelConfiguration = ModelConfiguration(schema: schema, isStoredInMemoryOnly: false)
+        //let schema = Schema([ ConsoleSetting.self, ])
+        let schema = Schema(versionedSchema: ConsoleSettingSchemaV2.self)
+        
+        // let modelConfiguration = ModelConfiguration(schema: schema, isStoredInMemoryOnly: false)
 
         do {
-            return try ModelContainer(for: schema, configurations: [modelConfiguration])
+            return try ModelContainer(for: ConsoleSetting.self,
+                                      migrationPlan: ConsoleSettingMigrationPlan.self,
+                                      configurations: ModelConfiguration(isStoredInMemoryOnly: false, allowsSave: true))
+            
+            // NG
+            // return try ModelContainer(for:schema,
+            //                           migrationPlan: ConsoleSettingMigrationPlan.self)
+            //                           configurations: modelConfiguration)
+            
+            
+            //return try ModelContainer(for: schema, configurations: [modelConfiguration])
         } catch {
             fatalError("Could not create ModelContainer: \(error)")
         }
