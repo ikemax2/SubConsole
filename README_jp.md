@@ -1,8 +1,3 @@
----
-title: SubConsole
-description: 外部端末の画面表示と操作環境を提供する MacOS アプリケーション
-lang: ja
----
 # SubConsole
 
 SubConsoleは、外部端末の画面表示と操作環境を提供する MacOS アプリケーションです。

@@ -1,8 +1,3 @@
----
-title: SubConsole
-description: MacOS application that provides screen display and operating environment for external devices
-lang: en-US
----
 # SubConsole
 
 SubConsole is MacOS Application which provides screen display and operating environment for external devices.
