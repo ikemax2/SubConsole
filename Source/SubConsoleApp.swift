@@ -24,13 +24,23 @@ struct SubConsoleApp: App {
         let libraryPath = NSSearchPathForDirectoriesInDomains(.libraryDirectory, .userDomainMask, true)[0] as! String
         print("Library Path:"+libraryPath)
         
-        let schema = Schema([
-            ConsoleSetting.self,
-        ])
-        let modelConfiguration = ModelConfiguration(schema: schema, isStoredInMemoryOnly: false)
+        //let schema = Schema([ ConsoleSetting.self, ])
+        let schema = Schema(versionedSchema: ConsoleSettingSchemaV2.self)
+        
+        // let modelConfiguration = ModelConfiguration(schema: schema, isStoredInMemoryOnly: false)
 
         do {
-            return try ModelContainer(for: schema, configurations: [modelConfiguration])
+            return try ModelContainer(for: ConsoleSetting.self,
+                                      migrationPlan: ConsoleSettingMigrationPlan.self,
+                                      configurations: ModelConfiguration(isStoredInMemoryOnly: false, allowsSave: true))
+            
+            // NG
+            // return try ModelContainer(for:schema,
+            //                           migrationPlan: ConsoleSettingMigrationPlan.self)
+            //                           configurations: modelConfiguration)
+            
+            
+            //return try ModelContainer(for: schema, configurations: [modelConfiguration])
         } catch {
             fatalError("Could not create ModelContainer: \(error)")
         }
@@ -46,7 +56,9 @@ struct SubConsoleApp: App {
                 
                 Task {
                     let window = NSApplication.shared.keyWindow
-                    window?.identifier = NSUserInterfaceItemIdentifier(SettingListView.identifier())
+                    
+                    appDelegate.windows[SettingListView.identifier()] = WeakReference(object:window)
+                    // window?.identifier = NSUserInterfaceItemIdentifier(SettingListView.identifier())
                 }
             }
         }
@@ -82,7 +94,7 @@ struct SubConsoleApp: App {
                             print("screen width : \(scr.frame.width)x\(scr.frame.height)")
                             print("screen backingScaleFactor \(scr.backingScaleFactor)")
                         }
-                                                
+                                                                                                
                         DispatchQueue.main.asyncAfter(deadline: .now()) {
                             // TODO: 同時に複数のウィンドウが開くような状況では、正しく動作しない。
                             let window = NSApplication.shared.keyWindow
@@ -90,6 +102,8 @@ struct SubConsoleApp: App {
                             if s.windowFullScreenStarting == true {
                                 window?.toggleFullScreen(nil)
                             }
+                            
+                            appDelegate.windows[ConsoleView.identifier(ssid: s.id)] = WeakReference(object:window)
                             
                             var screenSize = NSSize(width: 1980, height: 1180)
                             if let ms = NSScreen.main {
@@ -106,7 +120,8 @@ struct SubConsoleApp: App {
                             window?.setContentSize(windowSize)
                             window?.contentAspectRatio = NSSize(width: size.width, height: size.height)
                             
-                            window?.identifier = NSUserInterfaceItemIdentifier(ConsoleView.identifier(ssid: s.id))
+                            window?.backgroundColor = NSColor.black  // residual space color when fullscreen mode
+                            
                             
                         }
                         

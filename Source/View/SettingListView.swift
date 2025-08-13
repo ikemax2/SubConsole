@@ -11,6 +11,7 @@ import SerialGate
 
 struct SettingListView: View {
     @Binding var consoleStatus: Dictionary<UUID, Bool>
+    @EnvironmentObject var appDelegate : AppDelegate
     
     @Environment(\.modelContext) private var modelContext
     @Query private var settings: [ConsoleSetting]
@@ -43,6 +44,22 @@ struct SettingListView: View {
     
     var sortedSettings: [ConsoleSetting] {
         settings.sorted(using: sortOrder)
+    }
+    
+    var newSettingName : String {
+        var lastNum = 0
+        settings.forEach {
+            if $0.name.hasPrefix("Console ") == true {
+                print("setting name: \($0.name)")
+                let numString = $0.name.replacingOccurrences(of: "Console ", with: "")
+                if let num = Int(numString), lastNum < num {
+                    lastNum = num
+                }
+            }
+        }
+
+        lastNum += 1
+        return "Console \(lastNum)"
     }
     
     var body: some View {
@@ -122,7 +139,7 @@ struct SettingListView: View {
         .toolbar{
             SettingListToolbar(editing: $isEditing, selectedSettingID: $selectedSettingID, consoleStatus: $consoleStatus) {
                 
-                let newSetting = ConsoleSetting(name: "setting 1")
+                let newSetting = ConsoleSetting(name: self.newSettingName)
                 
                 modelContext.insert(newSetting)
                 selectedSettingID = newSetting.id
@@ -159,7 +176,8 @@ struct SettingListView: View {
                 return
             }
             
-            if window.identifier == NSUserInterfaceItemIdentifier(SettingListView.identifier() ) {
+            if let sw = appDelegate.windows[SettingListView.identifier()]?.object, window == sw {
+            // if window.identifier == NSUserInterfaceItemIdentifier(SettingListView.identifier() ) {
                 print("become keyWindow of settingListView")
                 keyboardMonitor?.setManipulator(nil)
             }

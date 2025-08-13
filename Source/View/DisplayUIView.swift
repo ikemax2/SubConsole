@@ -27,6 +27,7 @@ struct DisplayUIView: NSViewRepresentable, Equatable {
     @Binding var audioDevice : AVCaptureDevice?
     @Binding var displayStatus : DisplayStatus?
     
+    var cursorType : CursorType?
     
     init(captureDevice: Binding<AVCaptureDevice?>,
          captureFormat: Binding<AVCaptureDevice.Format?>,
@@ -34,7 +35,8 @@ struct DisplayUIView: NSViewRepresentable, Equatable {
          audioDevice: Binding<AVCaptureDevice?>,
          displayStatus: Binding<DisplayStatus?>,
          manipulator: Manipulator? = nil,
-         drawHandler: VideoRenderer.DrawHandler? = nil) {
+         drawHandler: VideoRenderer.DrawHandler? = nil,
+         cursorType: CursorType? = nil) {
 
 
         self._captureDevice = captureDevice
@@ -46,6 +48,8 @@ struct DisplayUIView: NSViewRepresentable, Equatable {
         
         self.manipulator = manipulator
         self.drawHandler = drawHandler
+        
+        self.cursorType = cursorType
                 
         NotificationCenter.default.addObserver(forName: Notification.Name.AVSampleBufferDisplayLayerFailedToDecode,
                                                object: nil, queue: nil) { notification in
@@ -77,7 +81,8 @@ struct DisplayUIView: NSViewRepresentable, Equatable {
         
         let nsView = DisplayView(statusUpdateHandler: handler,
                                  manipulator: self.manipulator,
-                                 drawHandler: self.drawHandler)
+                                 drawHandler: self.drawHandler,
+                                 cursorType: self.cursorType)
 
         return nsView
     }

@@ -30,7 +30,9 @@ struct ConsoleView: View {
     
     static func identifier(ssid: UUID ) -> String {
         "Console_\(ssid)"
-    }    
+    }
+    
+    private var cursorType : CursorType? = nil
     
     init(setting: ConsoleSetting, keyboardMonitor: KeyboardMonitor, deviceDiscovery: DeviceDiscovery) {
         print("ConsoleView initialized \(setting)")
@@ -85,6 +87,8 @@ struct ConsoleView: View {
         }else{
             _audioDevice = State(initialValue: nil)
         }
+        
+        cursorType = setting.mouseCursorType0
     }
     
     var body: some View {
@@ -94,8 +98,10 @@ struct ConsoleView: View {
                           captureFrameDuration: $videoDeviceFrameDuration,
                           audioDevice: $audioDevice,
                           displayStatus: $displayStatus,
-                          manipulator: manipulator,
-                          drawHandler: manipulator.drawHandler)
+                          manipulator: self.manipulator,
+                          drawHandler: self.manipulator.drawHandler,
+                          cursorType: self.cursorType
+                          )
         }
         .aspectRatio(videoDeviceFormat?.aspectRatio ?? 1, contentMode: .fit)
         .navigationTitle("\(setting.name)")
@@ -103,15 +109,15 @@ struct ConsoleView: View {
         .toolbar{
             ConsoleToolbar(muted: $manipulator.converter.mute)
         }*/
+        /*
         .onHover { hover in
-            
             if hover == true {
                 NSCursor.hide()
             }else {
                 NSCursor.unhide()
             }
-            
         }
+         */
         .onAppear(){
             // manipulator reset
             self.manipulator.reset()
@@ -126,14 +132,48 @@ struct ConsoleView: View {
                 return
             }
             
-            if window.identifier == NSUserInterfaceItemIdentifier(ConsoleView.identifier(ssid: setting.id)) {
+            if let sw = appDelegate.windows[ConsoleView.identifier(ssid: setting.id)]?.object, window == sw {
+            // if window.identifier == NSUserInterfaceItemIdentifier(ConsoleView.identifier(ssid: setting.id)) {
                 print("become keyWindow of consoleView \(setting.id)")
                 keyboardMonitor?.setManipulator(self.manipulator)
                 self.manipulator.reset()
             }
-            // 起動直後に didBecomeKeyNotificationは呼ばれるが、そのときはidentifierはまだ設定されていない
+            // 起動直後に didBecomeKeyNotificationは呼ばれるが、そのときはappDelegate.windowsに登録されていない
         }
+        /*
+        .onReceive(NotificationCenter.default.publisher(for: NSWindow.didEnterFullScreenNotification)) { notification in
+            guard let window = notification.object as? NSWindow else {
+                return
+            }
+            
+            if let sw = appDelegate.windows[ConsoleView.identifier(ssid: setting.id)]?.object, window == sw {
+                print("enter fullscreen")
+                self.manipulator.isFullScreen = true
+                //var options = NSApplication.shared.currentSystemPresentationOptions
+                //options.remove(.autoHideDock)
+                //options.insert(.hideDock)
+                //NSApplication.shared.presentationOptions = options
+                
+                Task {
+                    await MainActor.run{
+                        NSApplication.shared.presentationOptions = [.hideDock, .hideMenuBar]
+                    }
+                }
+
+
+            }
+        }
+        .onReceive(NotificationCenter.default.publisher(for: NSWindow.didExitFullScreenNotification)) { notification in
+            guard let window = notification.object as? NSWindow else {
+                return
+            }
+            
+            if let sw = appDelegate.windows[ConsoleView.identifier(ssid: setting.id)]?.object, window == sw {
+                print("exit fullscreen")
+                self.manipulator.isFullScreen = false
+            }
+        }
+         */
         
     }
-        
 }

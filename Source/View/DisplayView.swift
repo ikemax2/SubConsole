@@ -8,7 +8,10 @@ import AppKit
 import AVFoundation
 
 protocol DisplayViewDelegate : AnyObject {
-    func mouseMoved(event: NSEvent)
+    func mouseMoved(event: NSEvent, view: NSView)
+    func mouseEntered(event :NSEvent)
+    func mouseExited(event : NSEvent)
+    
     func mouseDown(event: NSEvent)
     func mouseUp(event: NSEvent)
     func rightMouseDown(event: NSEvent)
@@ -16,9 +19,9 @@ protocol DisplayViewDelegate : AnyObject {
     func otherMouseDown(event: NSEvent)
     func otherMouseUp(event: NSEvent)
     
-    func mouseDragged(event: NSEvent)
-    func rightMouseDragged(event: NSEvent)
-    func otherMouseDragged(event: NSEvent)
+    func mouseDragged(event: NSEvent, view: NSView)
+    func rightMouseDragged(event: NSEvent, view: NSView)
+    func otherMouseDragged(event: NSEvent, view: NSView)
     func scrollWheel(event: NSEvent)
 }
 
@@ -31,10 +34,14 @@ class DisplayView : NSView {
     weak var manipulator: Manipulator?
     
     weak var delegate : DisplayViewDelegate?
+           
+    var cursor : NSCursor?
+    var cursorCheckCounter : Int = 0
     
     init(statusUpdateHandler: VideoRenderer.StatusUpdateHandler? = nil,
          manipulator: Manipulator? = nil,
-         drawHandler: VideoRenderer.DrawHandler? = nil) {
+         drawHandler: VideoRenderer.DrawHandler? = nil,
+         cursorType: CursorType? = nil) {
         
         self.metalLayer = CAMetalLayer()
         self.manipulator = manipulator
@@ -50,6 +57,27 @@ class DisplayView : NSView {
         prepareMetalLayer()
         
         self.videoRenderer.connectToLayer(self.metalLayer)
+                
+        // load cursor Image
+        
+        switch cursorType {
+        case .none :
+            cursor = nil
+            break
+        case .dot:
+            if let image = NSImage(named: "cursor_dot.png") {
+                cursor = NSCursor(image: image, hotSpot:.zero)
+            }else{
+                fatalError()
+            }
+        case .empty:
+            if let image = NSImage(named: "cursor_empty.png") {
+                cursor = NSCursor(image: image, hotSpot:.zero)
+            }else{
+                fatalError()
+            }
+        }
+        
     }
     
     func prepareMetalLayer(){
@@ -61,7 +89,7 @@ class DisplayView : NSView {
         self.metalLayer.pixelFormat = .bgra8Unorm
         self.metalLayer.framebufferOnly = false
         //self.metalLayer.contentsGravity = .topLeft
-        self.metalLayer.contentsGravity = .resizeAspect
+        self.metalLayer.contentsGravity = .resizeAspect        
         self.metalLayer.contentsScale = 2.0   // TODO: 環境に応じて変更
         self.metalLayer.drawsAsynchronously = true
         self.metalLayer.removeAllAnimations()
@@ -150,7 +178,7 @@ class DisplayView : NSView {
     override func layout() {
         // layout() はviewサイズ変更があったときに呼ばれる。
         
-        print("CALayerView frame did change. \(self.frame.width)x\(self.frame.height)")
+        print("DisplayView frame did change. \(self.frame.width)x\(self.frame.height)")
         
         CATransaction.begin()
         // アニメーションなし
@@ -163,7 +191,6 @@ class DisplayView : NSView {
             }
         }
         CATransaction.commit()
-        
         self.manipulator?.manipulatingArea.displayDimensions = self.frame.size
         
         print(" metalLayer contentsScale: \(self.metalLayer.contentsScale)")
@@ -173,7 +200,16 @@ class DisplayView : NSView {
         //親クラスのlayout()を呼ぶ。必須。
         super.layout()
     }
-    
+        
+    var isFullScreen : Bool {
+                
+        if let w = self.window {
+            return w.styleMask.contains(.fullScreen)
+        }
+        return false
+        
+    }
+   
     
     // MARK: - for manipulating
     
@@ -192,9 +228,14 @@ class DisplayView : NSView {
         }
         
         let options: NSTrackingArea.Options = [
+            .mouseEnteredAndExited,
             .mouseMoved,
             .cursorUpdate,
-            .activeInKeyWindow
+            .activeInKeyWindow,
+            .inVisibleRect
+            //.activeAlways
+            //.activeWhenFirstResponder
+                
         ]
         let trackingArea = NSTrackingArea(rect: self.bounds, options: options, owner: self, userInfo: nil)
         self.addTrackingArea(trackingArea)
@@ -220,7 +261,32 @@ class DisplayView : NSView {
     
     // mouseMoved は、NSTrackingAreaなどを利用しないと反応しない
     override func mouseMoved(with event: NSEvent){
-        delegate?.mouseMoved(event: event)
+        delegate?.mouseMoved(event: event, view: self)
+
+        // fullscreen時に限定して、カーソルを強制的に戻す。以下の現象への対応。 NSCursor.currentも正しく動作していない模様。
+        //   ツールバーのあたりをクリックするとカーソルがデフォルトに戻される現象
+        //   dockを自動表示に設定しているときに、カーソルをエッジに持っていくと、カーソルがデフォルトに戻される現象
+        if let c = self.cursor, isFullScreen == true {
+            if cursorCheckCounter > 300 {
+                // print("cursor reset.")
+                c.set()
+                cursorCheckCounter = 0
+            }
+            cursorCheckCounter += 1
+        }
+        
+    }
+    
+    override func mouseEntered(with event: NSEvent) {
+        //cursorInRectangle = true
+        //addCursorRect(self.bounds, cursor: NSCursor(image: cursorImage, hotSpot:.zero))
+        delegate?.mouseEntered(event: event)
+    }
+    
+    override func mouseExited(with event: NSEvent) {
+        //cursorInRectangle = false
+        //NSCursor.arrow.set()
+        delegate?.mouseExited(event: event)
     }
         
     override func mouseDown(with event: NSEvent){
@@ -248,21 +314,32 @@ class DisplayView : NSView {
     }
     
     override func mouseDragged(with event: NSEvent) {
-        delegate?.mouseDragged(event: event)
-
+        delegate?.mouseDragged(event: event, view: self)
     }
         
     override func rightMouseDragged(with event: NSEvent) {
-        delegate?.rightMouseDragged(event: event)
+        delegate?.rightMouseDragged(event: event, view: self)
     }
     
     override func otherMouseDragged(with event: NSEvent) {
-        delegate?.otherMouseDragged(event: event)
+        delegate?.otherMouseDragged(event: event, view: self)
     }
     
     override func scrollWheel(with event: NSEvent) {
         delegate?.scrollWheel(event: event)
     }
     
+    override func cursorUpdate(with event: NSEvent) {
+        super.cursorUpdate(with: event)
+        self.cursor?.set()
+    }
+    
+    /*
+    override func resetCursorRects() {
+        print("resetCursorRects called.")
+       // discardCursorRects()
+       // addCursorRect(self.visibleRect, cursor: NSCursor(image: cursorImage, hotSpot:.zero))
+    }
+    */
 }
 

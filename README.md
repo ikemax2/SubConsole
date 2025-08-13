@@ -1,6 +1,11 @@
+---
+title: SubConsole
+description: MacOS application that provides screen display and operating environment for external devices
+lang: en-US
+---
 # SubConsole
 
-SubConsole is MacOS Application which provides display and manipulation environment.
+SubConsole is MacOS Application which provides screen display and operating environment for external devices.
 
 
 English / [日本語](https://ikemax2.github.io/SubConsole/README_jp.html)
@@ -186,5 +191,12 @@ Select the frame type for mouse cursor location.
 - When "Bottom-Left" is selected, in case of "Absolute" command type, the origin is the lower left corner of the screen, and the X coordinate value increases as you go to the right, and the Y coordinate value increases as you go up. In case of "Relative" command type, the amount of movement in the X direction increases as the mouse cursor moves to the right of the screen, and the amount of movement in the Y direction increases as the mouse cursor moves upward on the screen.
 
 
+#### Cursor Type
+Select display type for mouse cursor.
 
-　　
+- When "System Default" is selected, the cursor displayed by Mac OS is normal. At this point, both the mouse cursor displayed by Mac OS and the mouse cursor displayed by the guest terminal will be displayed on the screen.
+
+- When "Dot" is selected, the cursor displayed by Mac OS is changed to small dot shape. 
+
+- When "Empty" is selected, the cursor will not displayed on the screen by Mac OS. Only the mouse cursor displayed by the guest terminal will appear on the screen.
+
