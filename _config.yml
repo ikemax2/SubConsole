@@ -1,3 +1,5 @@
+google_site_verification: "RcfuqKu5fQblPm2Snx32b3PYrAO3w_K8hiVfmYTyoG8"
 plugins:
   - jekyll-sitemap
+  - jekyll-seo-tag
   

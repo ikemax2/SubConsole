@@ -2,7 +2,7 @@
 //  ConsoleSettingV2.swift
 //  SubConsole
 //
-//  Created by 池間たけひと on 2025/04/23.
+//  ©︎ 2025 TAKEHITO IKEMA
 //
 import Foundation
 import SwiftData
